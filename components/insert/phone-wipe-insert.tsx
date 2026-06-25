@@ -1,16 +1,15 @@
 "use client";
 
-import * as React from "react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Progress } from "@/components/ui/progress"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Slider } from "@/components/ui/slider"
+import { Switch } from "@/components/ui/switch"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   DEFAULT_SETTINGS,
   SETTINGS_STORAGE_KEY,
@@ -35,8 +34,9 @@ import {
   type ProgressProfile,
   type StartMode,
   type ThemeMode,
-} from "@/lib/insert-settings";
-import { cn } from "@/lib/utils";
+} from "@/lib/insert-settings"
+import { cn } from "@/lib/utils"
+import * as React from "react"
 
 const stages = {
   en: [
@@ -720,7 +720,7 @@ export function PhoneWipeInsert() {
               <div className="relative z-10 text-center">
                 <div className="text-[58px] font-light tabular-nums tracking-[-0.08em] text-foreground">
                   {Math.floor(progress)}
-                  <span className="text-2xl text-primary/80">%</span>
+                  <span className="ml-[0.06em] text-2xl text-cyan-200/80">%</span>
                 </div>
                 <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.34em] text-primary/75">
                   {started ? activeStage.label : ui.ready}
