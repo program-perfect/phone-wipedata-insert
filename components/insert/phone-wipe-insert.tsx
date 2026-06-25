@@ -765,9 +765,11 @@ export function PhoneWipeInsert() {
                 return (
                   <div
                     key={group.name}
+                    data-wipe-check-row
+                    data-done={done ? "true" : "false"}
                     className={cn(
                       "flex items-center justify-between rounded-2xl border px-3 py-2 text-[12px] transition-all duration-[var(--motion-duration)]",
-                      done ? "border-primary/30 bg-primary/10 text-foreground" : "border-border bg-card/40 text-muted-foreground",
+                      done ? "border-primary/55 bg-primary/20 text-foreground" : "border-border/90 bg-card/85 text-muted-foreground/95",
                     )}
                   >
                     <span>{group.name}</span>
@@ -779,7 +781,7 @@ export function PhoneWipeInsert() {
           )}
 
           {showLiveElements && (
-            <div className="wipe-live-elements grid grid-cols-[repeat(14,minmax(0,1fr))] gap-1 opacity-75" aria-hidden="true">
+            <div className="wipe-live-elements grid grid-cols-[repeat(14,minmax(0,1fr))] gap-1 opacity-100" aria-hidden="true">
               {blocks.map((block) => {
                 const lit = progress > (block / blocks.length) * 100;
                 return (

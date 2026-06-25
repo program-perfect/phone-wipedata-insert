@@ -473,6 +473,7 @@
   isolation: isolate;
   min-height: 68px;
   overflow: hidden;
+  opacity: 1 !important;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--delete-button-color, #ff1028) 86%, white 18%);
   background:
@@ -481,12 +482,12 @@
     linear-gradient(135deg, color-mix(in srgb, var(--delete-button-color, #ff1028) 72%, white 28%) 0%, var(--delete-button-color, #ff1028) 38%, color-mix(in srgb, var(--delete-button-color, #ff1028) 92%, black 8%) 100%);
   color: var(--delete-button-fg, #ffffff);
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--delete-button-color, #ff1028) 42%, transparent),
-    0 0 28px color-mix(in srgb, var(--delete-button-color, #ff1028) 52%, transparent),
-    0 24px 72px color-mix(in srgb, var(--delete-button-color, #ff1028) 58%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--delete-button-color, #ff1028) 72%, transparent),
+    0 0 34px color-mix(in srgb, var(--delete-button-color, #ff1028) 78%, transparent),
+    0 24px 82px color-mix(in srgb, var(--delete-button-color, #ff1028) 72%, transparent),
     inset 0 1px 0 rgba(255, 255, 255, 0.52),
     inset 0 -10px 24px rgba(0, 0, 0, 0.08);
-  filter: saturate(1.35) brightness(1.08) contrast(1.08);
+  filter: saturate(1.72) brightness(1.18) contrast(1.16);
   font-size: 15px;
   font-weight: 900;
   letter-spacing: 0.36em;
@@ -503,12 +504,13 @@
   content: "";
   position: absolute;
   inset: -45% -18%;
-  z-index: -1;
+  z-index: 1;
+  pointer-events: none;
   background:
     linear-gradient(115deg, transparent 28%, rgba(255, 255, 255, 0.98) 45%, transparent 60%),
     radial-gradient(circle at 78% 22%, rgba(255, 255, 255, 1), transparent 6%),
     radial-gradient(circle at 24% 72%, rgba(255, 255, 255, 0.78), transparent 5%);
-  opacity: 1;
+  opacity: 0.98;
   transform: translateX(-38%) rotate(4deg);
   animation: delete-button-spark var(--motion-sparkle, 1.75s) linear infinite;
 }
@@ -519,7 +521,8 @@
   inset: 7px;
   border-radius: inherit;
   border: 1px solid rgba(255, 255, 255, 0.44);
-  box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.16);
+  z-index: 3;
+  box-shadow: inset 0 0 18px rgba(255, 255, 255, 0.2);
   pointer-events: none;
 }
 
@@ -540,7 +543,7 @@
 
 .delete-start-button span {
   position: relative;
-  z-index: 1;
+  z-index: 4;
   display: inline-block;
   text-shadow:
     0 1px 2px rgba(0, 0, 0, 0.28),
@@ -588,7 +591,7 @@
     transform: translateY(14px) scale(0.98);
   }
   100% {
-    opacity: 0.46;
+    opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
@@ -600,7 +603,7 @@
     filter: blur(6px);
   }
   100% {
-    opacity: 0.46;
+    opacity: 1;
     transform: translateY(0) scale(1);
     filter: blur(0);
   }
@@ -609,17 +612,17 @@
 @keyframes delete-button-pulse {
   0%, 100% {
     box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--delete-button-color, #ff1028) 42%, transparent),
-      0 0 26px color-mix(in srgb, var(--delete-button-color, #ff1028) 48%, transparent),
-      0 24px 72px color-mix(in srgb, var(--delete-button-color, #ff1028) 54%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--delete-button-color, #ff1028) 70%, transparent),
+      0 0 32px color-mix(in srgb, var(--delete-button-color, #ff1028) 76%, transparent),
+      0 24px 82px color-mix(in srgb, var(--delete-button-color, #ff1028) 70%, transparent),
       inset 0 1px 0 rgba(255, 255, 255, 0.52),
       inset 0 -10px 24px rgba(0, 0, 0, 0.08);
   }
   50% {
     box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--delete-button-color, #ff1028) 62%, transparent),
-      0 0 42px color-mix(in srgb, var(--delete-button-color, #ff1028) 72%, transparent),
-      0 28px 90px color-mix(in srgb, var(--delete-button-color, #ff1028) 64%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--delete-button-color, #ff1028) 86%, transparent),
+      0 0 54px color-mix(in srgb, var(--delete-button-color, #ff1028) 86%, transparent),
+      0 30px 104px color-mix(in srgb, var(--delete-button-color, #ff1028) 78%, transparent),
       inset 0 1px 0 rgba(255, 255, 255, 0.62),
       inset 0 -8px 18px rgba(0, 0, 0, 0.08);
   }
@@ -640,4 +643,18 @@
     transform: translateX(46%) rotate(4deg);
     opacity: 0;
   }
+}
+
+/* Strong foreground visibility for filming */
+.start-control-slot,
+.wipe-live-elements {
+  opacity: 1;
+}
+
+.wipe-live-elements [data-wipe-check-row] {
+  backdrop-filter: blur(16px);
+}
+
+.wipe-live-elements [data-wipe-check-row][data-done="true"] {
+  box-shadow: 0 0 18px color-mix(in srgb, var(--insert-primary) 18%, transparent);
 }
