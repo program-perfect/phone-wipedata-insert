@@ -1,4 +1,4 @@
-export const SETTINGS_STORAGE_KEY = "phone-wipe-insert-settings-v6-start-controls";
+export const SETTINGS_STORAGE_KEY = "phone-wipe-insert-settings-v7-subtle-delete";
 
 export type LocaleId = "en" | "ru";
 export type ThemeMode = "light" | "dark";
@@ -399,7 +399,7 @@ export const DEFAULT_SETTINGS: InsertSettings = {
   checkpoint90: 98,
   fontId: "roboto",
   primaryColor: presets.pixel.light.primary,
-  deleteButtonColor: "#ff1028",
+  deleteButtonColor: "#ef1d2d",
   backgroundColor: presets.pixel.light.background,
   surfaceColor: presets.pixel.light.surface,
   foregroundColor: presets.pixel.light.foreground,
