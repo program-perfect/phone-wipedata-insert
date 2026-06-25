@@ -22,13 +22,18 @@ bun build
 bun start
 ```
 
-## Touch controls for set
+## Startup control hint
 
-The insert is now usable on phones/tablets without a keyboard or mouse:
+On every visit or page reload, the insert shows a pre-start hint with both touch gestures and keyboard keybinds. It can be disabled in **Настройки → Жесты / Keys** before the process starts.
+
+Touch-only devices:
 
 - Hidden fullscreen button: invisible tap zone in the **top-right corner**.
 - Double tap on empty screen: restart the wipe process from the beginning.
 - Triple tap on empty screen: exit fullscreen.
+
+Keyboard / desktop devices:
+
 - `Space` / `Enter`: restart process from the beginning.
 - `R`: reset to pre-start idle state.
 - `F`: enter fullscreen.
@@ -42,12 +47,23 @@ Available controls:
 - Show/hide the startup hint. By default the hint appears on every visit/reload.
 - Light/dark mode. Default is **light**.
 - Android-style color presets: Pixel, Samsung One UI, Xiaomi HyperOS, Huawei HarmonyOS, OPPO ColorOS, Nothing OS, Motorola My UX.
-- Process duration and progress graph: linear, slow start, fast start, middle hold, custom checkpoints.
+- Process duration and progress graph: linear, slow start, fast start, middle hold, custom checkpoints. Default is now the fastest available config: 8 seconds with an aggressive custom curve.
 - Element/screen styles: Material Clean, Minimal, Glass, Cyberpunk, Terminal, Operative noir, Brutalist.
 - UI font preset.
 - Manual colors: accent, background, panels, text, secondary text, glow.
 - Date, device ID and battery percent.
 - Optional hard cut to a black reboot screen after 100%, with a fictional glowing **Droid** wordmark and a custom non-Android geometric logo.
+
+## Fast default process
+
+The default wipe process now uses the fastest available settings from the existing config:
+
+- duration: **8 seconds**;
+- progress profile: **custom**;
+- custom checkpoints: **45% at 25% time**, **85% at 60% time**, **98% at 90% time**;
+- settings storage key bumped to `phone-wipe-insert-settings-v5-fast`, so the new fast defaults are applied even on devices that previously saved slower local settings.
+
+You can still slow the animation down from **Настройки → Скорость** if the shot needs a longer rhythm.
 
 ## Structure
 
@@ -68,8 +84,14 @@ The visual language is custom, not default shadcn gray: light Android-system bas
 
 ## Local settings reset
 
-Open **Настройки → Жесты → Сбросить локальные настройки**. This removes the saved settings key and returns the insert to default light theme settings.
+Open **Настройки → Жесты / Keys → Сбросить локальные настройки**. This removes the saved settings key and returns the insert to default light theme settings.
 
 ## Reboot screen
 
 Open **Настройки → Рестарт** and enable the hard cut. After the wipe reaches 100%, the screen switches sharply to black and shows `/public/droid-logo.svg` plus the configurable `Droid` wordmark. The logo is intentionally fictional and does not reuse the Android robot mark.
+
+## Update
+
+- top status row is hidden by default, with an optional setting to show time, date, and battery percentage;
+
+- startup hint now shows both touch gestures for mouse-free devices and keyboard keybinds for desktop/keyboard devices.

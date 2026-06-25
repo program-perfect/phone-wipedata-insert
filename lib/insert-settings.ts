@@ -1,4 +1,4 @@
-export const SETTINGS_STORAGE_KEY = "phone-wipe-insert-settings-v4";
+export const SETTINGS_STORAGE_KEY = "phone-wipe-insert-settings-v5-fast";
 
 export type ThemeMode = "light" | "dark";
 export type PresetId = "pixel" | "samsung" | "xiaomi" | "huawei" | "oppo" | "nothing" | "motorola";
@@ -32,6 +32,7 @@ export type InsertPreset = {
 
 export type InsertSettings = {
   showHints: boolean;
+  showTopStatus: boolean;
   elementStyle: ElementStyle;
   themeMode: ThemeMode;
   presetId: PresetId;
@@ -360,14 +361,15 @@ export const presets: Record<PresetId, InsertPreset> = {
 
 export const DEFAULT_SETTINGS: InsertSettings = {
   showHints: true,
+  showTopStatus: false,
   elementStyle: "material",
   themeMode: "light",
   presetId: "pixel",
-  progressProfile: "linear",
-  durationSeconds: 32,
-  checkpoint25: 22,
-  checkpoint60: 66,
-  checkpoint90: 92,
+  progressProfile: "custom",
+  durationSeconds: 8,
+  checkpoint25: 45,
+  checkpoint60: 85,
+  checkpoint90: 98,
   fontId: "roboto",
   primaryColor: presets.pixel.light.primary,
   backgroundColor: presets.pixel.light.background,
@@ -421,6 +423,7 @@ export function sanitizeSettings(value: Partial<InsertSettings> | null | undefin
     progressProfile,
     elementStyle,
     showHints: Boolean(merged.showHints),
+    showTopStatus: Boolean(merged.showTopStatus),
     durationSeconds: clampNumber(Number(merged.durationSeconds), 8, 120),
     checkpoint25: clampNumber(Number(merged.checkpoint25), 5, 45),
     checkpoint60: clampNumber(Number(merged.checkpoint60), 30, 85),

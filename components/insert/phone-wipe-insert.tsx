@@ -412,16 +412,18 @@ export function PhoneWipeInsert() {
       )}
 
       <section className="relative z-10 mx-auto flex h-full w-full max-w-[460px] flex-col px-5 py-4 sm:px-7 sm:py-6">
-        <header className="flex items-center justify-between text-[12px] font-medium tracking-[0.12em] text-muted-foreground">
-          <span>{currentTime}</span>
-          <Badge variant="outline" className="border-primary/20 bg-background/35 text-[10px] uppercase tracking-[0.24em] text-foreground/75 backdrop-blur">
-            {settings.dateLabel}
-          </Badge>
-          <span className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_14px_var(--insert-glow-color)]" />
-            {settings.batteryPercent}%
-          </span>
-        </header>
+        {settings.showTopStatus && (
+          <header className="flex items-center justify-between text-[12px] font-medium tracking-[0.12em] text-muted-foreground">
+            <span>{currentTime}</span>
+            <Badge variant="outline" className="border-primary/20 bg-background/35 text-[10px] uppercase tracking-[0.24em] text-foreground/75 backdrop-blur">
+              {settings.dateLabel}
+            </Badge>
+            <span className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_14px_var(--insert-glow-color)]" />
+              {settings.batteryPercent}%
+            </span>
+          </header>
+        )}
 
         <div className="flex flex-1 flex-col justify-center gap-8">
           <div className="space-y-3 text-center">
@@ -448,9 +450,8 @@ export function PhoneWipeInsert() {
 
           <div className="space-y-4">
             <Progress value={progress} className="h-2 bg-muted" />
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <div className="flex items-center justify-start text-xs text-muted-foreground">
               <span className="font-mono uppercase tracking-[0.18em]">{wipedSize}</span>
-              <span className="font-mono uppercase tracking-[0.18em]">{isComplete ? "complete" : progressProfiles[settings.progressProfile]}</span>
             </div>
           </div>
 
@@ -491,14 +492,26 @@ export function PhoneWipeInsert() {
       </section>
 
       {!started && hintOpen && settings.showHints && !settingsOpen && (
-        <div className="absolute inset-0 z-30 grid place-items-center bg-background/82 px-8 text-center backdrop-blur-md">
-          <div data-control onPointerUp={(event) => event.stopPropagation()} className="glass-panel max-w-[360px] rounded-[32px] px-7 py-6">
-            <span className="block text-[11px] font-semibold uppercase tracking-[0.35em] text-primary/75">touch controls</span>
-            <span className="mt-3 block text-2xl font-semibold tracking-[-0.04em] text-foreground">Жесты для площадки</span>
-            <div className="mt-4 space-y-2 text-left text-sm leading-6 text-muted-foreground">
-              <p>Двойной тап по экрану — начать процесс заново.</p>
-              <p>Тройной тап — выйти из полноэкранного режима.</p>
-              <p>Почти невидимая зона справа сверху — вход в fullscreen.</p>
+        <div className="absolute inset-0 z-30 grid place-items-center bg-background/82 px-6 text-center backdrop-blur-md">
+          <div data-control onPointerUp={(event) => event.stopPropagation()} className="glass-panel max-w-[420px] rounded-[32px] px-6 py-6">
+            <span className="block text-[11px] font-semibold uppercase tracking-[0.35em] text-primary/75">gesture & keybind controls</span>
+            <span className="mt-3 block text-2xl font-semibold tracking-[-0.04em] text-foreground">Управление вставкой</span>
+            <p className="mt-2 text-sm leading-5 text-muted-foreground">
+              Подсказка появляется при каждом входе или перезагрузке страницы. Её можно отключить в настройках перед стартом.
+            </p>
+            <div className="mt-5 grid gap-3 text-left text-sm leading-6 text-muted-foreground sm:grid-cols-2">
+              <div className="rounded-3xl border border-border bg-background/55 p-4">
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-primary/80">без мыши</p>
+                <p>Скрытая зона справа сверху — fullscreen.</p>
+                <p>Двойной тап по экрану — начать процесс заново.</p>
+                <p>Тройной тап — выйти из fullscreen.</p>
+              </div>
+              <div className="rounded-3xl border border-border bg-background/55 p-4">
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-primary/80">с клавиатурой</p>
+                <p><kbd className="rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] text-foreground">Space</kbd> / <kbd className="rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] text-foreground">Enter</kbd> — старт заново.</p>
+                <p><kbd className="rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] text-foreground">R</kbd> — сброс на стартовый экран.</p>
+                <p><kbd className="rounded-md border border-border bg-muted px-1.5 py-0.5 text-[10px] text-foreground">F</kbd> — fullscreen.</p>
+              </div>
             </div>
             <div className="mt-5 grid grid-cols-2 gap-2">
               <Button variant="secondary" className="rounded-full" onClick={() => setHintOpen(false)}>
@@ -535,7 +548,7 @@ export function PhoneWipeInsert() {
                   <TabsTrigger value="speed">Скорость</TabsTrigger>
                   <TabsTrigger value="visual">Экран</TabsTrigger>
                   <TabsTrigger value="reboot">Рестарт</TabsTrigger>
-                  <TabsTrigger value="hints">Жесты</TabsTrigger>
+                  <TabsTrigger value="hints">Жесты / Keys</TabsTrigger>
                 </TabsList>
               </div>
 
@@ -672,6 +685,13 @@ export function PhoneWipeInsert() {
                         <Input value={settings.deviceId} onChange={(event) => updateSetting("deviceId", event.target.value)} className="rounded-2xl bg-background/60" />
                       </FieldRow>
                     </div>
+                    <div className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-background/60 px-3 py-3">
+                      <div>
+                        <p className="text-sm font-medium">Показывать верхнюю строку</p>
+                        <p className="text-xs text-muted-foreground">Время, дату и процент батареи сверху. По умолчанию отключено для чистой вставки.</p>
+                      </div>
+                      <Switch checked={settings.showTopStatus} onCheckedChange={(checked) => updateSetting("showTopStatus", Boolean(checked))} />
+                    </div>
                     <FieldRow label="Заряд батареи" value={`${settings.batteryPercent}%`}>
                       <Slider min={1} max={100} step={1} value={[settings.batteryPercent]} onValueChange={([value]) => updateSetting("batteryPercent", value)} />
                     </FieldRow>
@@ -722,7 +742,7 @@ export function PhoneWipeInsert() {
                       <Switch checked={settings.showHints} onCheckedChange={(checked) => updateSetting("showHints", Boolean(checked))} />
                     </div>
                     <div className="rounded-2xl bg-muted p-3 text-xs leading-5 text-muted-foreground">
-                      Двойной тап по пустому экрану запускает очистку с нуля. Тройной тап выходит из fullscreen. Почти невидимая кнопка справа сверху только включает fullscreen.
+                      Без мыши: скрытая зона справа сверху включает fullscreen, двойной тап запускает очистку с нуля, тройной тап выходит из fullscreen. С клавиатурой: Space/Enter — старт заново, R — сброс на стартовый экран, F — fullscreen.
                     </div>
                     <Button variant="secondary" className="w-full rounded-full" onClick={resetLocalSettings}>
                       Сбросить локальные настройки
