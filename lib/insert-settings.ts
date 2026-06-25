@@ -399,7 +399,7 @@ export const DEFAULT_SETTINGS: InsertSettings = {
   checkpoint90: 98,
   fontId: "roboto",
   primaryColor: presets.pixel.light.primary,
-  deleteButtonColor: "#ef1d2d",
+  deleteButtonColor: "#ff1028",
   backgroundColor: presets.pixel.light.background,
   surfaceColor: presets.pixel.light.surface,
   foregroundColor: presets.pixel.light.foreground,
