@@ -473,6 +473,7 @@
   isolation: isolate;
   min-height: 64px;
   overflow: hidden;
+  opacity: 1 !important;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--delete-button-color, #ef1d2d) 72%, white 16%);
   background:
@@ -483,6 +484,7 @@
     0 20px 54px color-mix(in srgb, var(--delete-button-color, #ef1d2d) 38%, transparent),
     inset 0 1px 0 rgba(255, 255, 255, 0.35),
     inset 0 -16px 32px rgba(0, 0, 0, 0.14);
+  filter: saturate(1.08) brightness(1.01) contrast(1.02);
   font-size: 14px;
   font-weight: 800;
   letter-spacing: 0.34em;
@@ -515,6 +517,14 @@
   border-radius: inherit;
   border: 1px solid rgba(255, 255, 255, 0.26);
   pointer-events: none;
+}
+
+.delete-start-button:hover {
+  filter: saturate(1.1) brightness(1.02) contrast(1.03);
+  box-shadow:
+    0 22px 58px color-mix(in srgb, var(--delete-button-color, #ef1d2d) 42%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.38),
+    inset 0 -16px 32px rgba(0, 0, 0, 0.14);
 }
 
 .delete-start-button:active {
@@ -570,7 +580,7 @@
     transform: translateY(14px) scale(0.98);
   }
   100% {
-    opacity: 0.46;
+    opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
@@ -582,9 +592,28 @@
     filter: blur(6px);
   }
   100% {
-    opacity: 0.46;
+    opacity: 1;
     transform: translateY(0) scale(1);
     filter: blur(0);
+  }
+}
+
+@keyframes delete-button-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--delete-button-color, #ef1d2d) 70%, transparent),
+      0 0 32px color-mix(in srgb, var(--delete-button-color, #ef1d2d) 76%, transparent),
+      0 24px 82px color-mix(in srgb, var(--delete-button-color, #ef1d2d) 70%, transparent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.52),
+      inset 0 -10px 24px rgba(0, 0, 0, 0.08);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--delete-button-color, #ef1d2d) 86%, transparent),
+      0 0 54px color-mix(in srgb, var(--delete-button-color, #ef1d2d) 86%, transparent),
+      0 30px 104px color-mix(in srgb, var(--delete-button-color, #ef1d2d) 78%, transparent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.62),
+      inset 0 -8px 18px rgba(0, 0, 0, 0.08);
   }
 }
 
@@ -597,10 +626,24 @@
     opacity: 0.9;
   }
   46% {
-    opacity: 0.28;
+    opacity: 0.72;
   }
   100% {
     transform: translateX(46%) rotate(4deg);
     opacity: 0;
   }
+}
+
+/* Strong foreground visibility for filming */
+.start-control-slot,
+.wipe-live-elements {
+  opacity: 1;
+}
+
+.wipe-live-elements [data-wipe-check-row] {
+  backdrop-filter: blur(16px);
+}
+
+.wipe-live-elements [data-wipe-check-row][data-done="true"] {
+  box-shadow: 0 0 18px color-mix(in srgb, var(--insert-primary) 18%, transparent);
 }

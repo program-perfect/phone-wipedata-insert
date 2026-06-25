@@ -1,4 +1,4 @@
-export const SETTINGS_STORAGE_KEY = "phone-wipe-insert-settings-v6-start-controls";
+export const SETTINGS_STORAGE_KEY = "phone-wipe-insert-settings-v7-subtle-delete";
 
 export type LocaleId = "en" | "ru";
 export type ThemeMode = "light" | "dark";
