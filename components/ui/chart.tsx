@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/utils"
-import * as React from "react"
-import * as RechartsPrimitive from "recharts"
+import * as React from "react";
+import * as RechartsPrimitive from "recharts";
+import { cn } from "@/lib/utils";
 
 const THEMES = { light: "", dark: ".dark" } as const;
 
@@ -80,6 +80,4 @@ function ChartLegendContent({ className, ...props }: React.ComponentProps<"div">
   return <div className={cn("flex items-center justify-center gap-4", className)} {...props} />;
 }
 
-export { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent, useChart }
-
-
+export { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent, useChart };

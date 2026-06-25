@@ -22,13 +22,18 @@ bun build
 bun start
 ```
 
-## Touch controls for set
+## Startup control hint
 
-The insert is now usable on phones/tablets without a keyboard or mouse:
+On every visit or page reload, the insert shows a pre-start hint with both touch gestures and keyboard keybinds. It can be disabled in **Настройки → Жесты / Keys** before the process starts.
+
+Touch-only devices:
 
 - Hidden fullscreen button: invisible tap zone in the **top-right corner**.
 - Double tap on empty screen: restart the wipe process from the beginning.
 - Triple tap on empty screen: exit fullscreen.
+
+Keyboard / desktop devices:
+
 - `Space` / `Enter`: restart process from the beginning.
 - `R`: reset to pre-start idle state.
 - `F`: enter fullscreen.
@@ -68,8 +73,14 @@ The visual language is custom, not default shadcn gray: light Android-system bas
 
 ## Local settings reset
 
-Open **Настройки → Жесты → Сбросить локальные настройки**. This removes the saved settings key and returns the insert to default light theme settings.
+Open **Настройки → Жесты / Keys → Сбросить локальные настройки**. This removes the saved settings key and returns the insert to default light theme settings.
 
 ## Reboot screen
 
 Open **Настройки → Рестарт** and enable the hard cut. After the wipe reaches 100%, the screen switches sharply to black and shows `/public/droid-logo.svg` plus the configurable `Droid` wordmark. The logo is intentionally fictional and does not reuse the Android robot mark.
+
+## Update
+
+- top status row is hidden by default, with an optional setting to show time, date, and battery percentage;
+
+- startup hint now shows both touch gestures for mouse-free devices and keyboard keybinds for desktop/keyboard devices.
