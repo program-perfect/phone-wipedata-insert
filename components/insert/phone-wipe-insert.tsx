@@ -720,7 +720,7 @@ export function PhoneWipeInsert() {
               <div className="relative z-10 text-center">
                 <div className="text-[58px] font-light tabular-nums tracking-[-0.08em] text-foreground">
                   {Math.floor(progress)}
-                  <span className="ml-[0.5em] text-2xl text-cyan-200/80">%</span>
+                  <span className="ml-[0.4em] text-2xl text-cyan-200/80">%</span>
                 </div>
                 <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.34em] text-primary/75">
                   {started ? activeStage.label : ui.ready}
