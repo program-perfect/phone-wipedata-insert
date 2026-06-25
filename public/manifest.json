@@ -1,0 +1,15 @@
+{
+  "name": "Phone Wipe Insert",
+  "short_name": "Wipe Insert",
+  "start_url": "/",
+  "display": "fullscreen",
+  "background_color": "#05080d",
+  "theme_color": "#05080d",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
