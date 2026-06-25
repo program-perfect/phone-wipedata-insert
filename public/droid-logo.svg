@@ -1,0 +1,28 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Droid fictional device logo">
+  <defs>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.35 0 0 0 0 0.82 0 0 0 0 1 0 0 0 0.86 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="stroke" x1="50" y1="36" x2="210" y2="218" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F0FCFF"/>
+      <stop offset="0.45" stop-color="#67E8F9"/>
+      <stop offset="1" stop-color="#2563EB"/>
+    </linearGradient>
+  </defs>
+  <path d="M128 24L216 76V180L128 232L40 180V76L128 24Z" stroke="url(#stroke)" stroke-width="10" stroke-linejoin="round" filter="url(#glow)"/>
+  <path d="M86 68H126C164 68 192 93 192 128C192 163 164 188 126 188H86V68Z" stroke="#E0F7FF" stroke-width="14" stroke-linejoin="round" filter="url(#glow)"/>
+  <path d="M116 99H128C147 99 160 111 160 128C160 145 147 157 128 157H116V99Z" fill="#67E8F9" fill-opacity="0.18" stroke="#67E8F9" stroke-width="8"/>
+  <path d="M54 78H86" stroke="#67E8F9" stroke-width="7" stroke-linecap="round" filter="url(#glow)"/>
+  <path d="M54 178H86" stroke="#67E8F9" stroke-width="7" stroke-linecap="round" filter="url(#glow)"/>
+  <path d="M126 48V68" stroke="#67E8F9" stroke-width="7" stroke-linecap="round" filter="url(#glow)"/>
+  <path d="M126 188V208" stroke="#67E8F9" stroke-width="7" stroke-linecap="round" filter="url(#glow)"/>
+  <circle cx="54" cy="78" r="5" fill="#E0F7FF" filter="url(#glow)"/>
+  <circle cx="54" cy="178" r="5" fill="#E0F7FF" filter="url(#glow)"/>
+  <circle cx="126" cy="48" r="5" fill="#E0F7FF" filter="url(#glow)"/>
+  <circle cx="126" cy="208" r="5" fill="#E0F7FF" filter="url(#glow)"/>
+</svg>
