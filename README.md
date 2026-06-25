@@ -84,7 +84,7 @@ Available controls:
 - Element/screen styles: Material Clean, Minimal, Glass, Cyberpunk, Terminal, Operative noir, Brutalist.
 - UI font preset.
 - Manual colors: accent, background, panels, text, secondary text, glow.
-- Date, device ID and battery percent.
+- Date, device ID, battery percent, and total storage size shown in the wipe counter.
 - Optional hard cut to a black reboot screen after 100%, with a fictional glowing **Droid** wordmark and a custom non-Android geometric logo.
 
 ## Fast default process
@@ -100,7 +100,7 @@ You can still slow the animation down from **Settings → Speed** if the shot ne
 
 ## Completion wave
 
-At 100%, the insert shows a meaningful completion animation: a final control wave expands from the center, cross-axis lines lock onto the cleared storage state, and the confirmation card reports that residual signatures were suppressed. This keeps the ending readable on camera without turning it into random decoration.
+At 100%, the insert shows a subtle background completion animation: a final control wave expands behind the main UI, cross-axis lines quietly lock onto the cleared storage state, and the confirmation card reports that residual signatures were suppressed. The wave opacity is intentionally reduced so it supports the interface instead of overpowering it on camera.
 
 ## Structure
 

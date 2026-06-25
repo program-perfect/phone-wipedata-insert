@@ -149,6 +149,8 @@ const copy = {
     showTop: "Show top status row",
     showTopDescription: "Time, date and battery percentage at the top. Disabled by default for a clean insert.",
     battery: "Battery",
+    storageTotal: "Total storage",
+    storageDescription: "Total device storage shown under the progress bar. Replaces the fixed 128 GB value.",
     colorsTitle: "Element colors",
     activePreset: "Active preset",
     accent: "Accent",
@@ -238,6 +240,8 @@ const copy = {
     showTop: "Показывать верхнюю строку",
     showTopDescription: "Время, дату и процент батареи сверху. По умолчанию отключено для чистой вставки.",
     battery: "Заряд батареи",
+    storageTotal: "Общий объём",
+    storageDescription: "Общий объём памяти устройства под прогресс-баром. Заменяет фиксированные 128 GB.",
     colorsTitle: "Цвета элементов",
     activePreset: "Активный пресет",
     accent: "Акцент",
@@ -432,10 +436,10 @@ export function PhoneWipeInsert() {
   }, [progress, stageList]);
 
   const wipedSize = React.useMemo(() => {
-    const totalGb = 128;
+    const totalGb = settings.storageTotalGb;
     const erasedGb = (totalGb * progress) / 100;
     return ui.wipedVolume(`${erasedGb.toFixed(1)} GB`, `${totalGb} GB`);
-  }, [progress, ui]);
+  }, [progress, settings.storageTotalGb, ui]);
 
   const currentTime = React.useMemo(() => formatTime(elapsed), [elapsed]);
 
@@ -999,6 +1003,10 @@ export function PhoneWipeInsert() {
                       <Switch checked={settings.showTopStatus} onCheckedChange={(checked) => updateSetting("showTopStatus", Boolean(checked))} />
                     </div>
                     <FieldRow label={ui.battery} value={`${settings.batteryPercent}%`}><Slider min={1} max={100} step={1} value={[settings.batteryPercent]} onValueChange={([value]) => updateSetting("batteryPercent", value)} /></FieldRow>
+                    <FieldRow label={ui.storageTotal} value={`${settings.storageTotalGb} GB`}>
+                      <Slider min={8} max={4096} step={8} value={[settings.storageTotalGb]} onValueChange={([value]) => updateSetting("storageTotalGb", value)} />
+                    </FieldRow>
+                    <p className="rounded-2xl bg-muted p-3 text-xs leading-5 text-muted-foreground">{ui.storageDescription}</p>
                   </SettingBlock>
 
                   <SettingBlock title={ui.colorsTitle} description={`${ui.activePreset}: ${currentPreset.title}.`}>
@@ -1044,13 +1052,13 @@ export function PhoneWipeInsert() {
       )}
 
       {isComplete && !rebootScreen && (
-        <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden" aria-hidden="true">
+        <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden opacity-55" aria-hidden="true">
           <div className="completion-wave-field">
             {completionWaves.map((wave) => (
               <span
                 key={wave}
                 className="completion-wave-ring"
-                style={{ "--wave-delay": `${wave * 0.24}s`, "--wave-alpha": `${0.74 - wave * 0.07}` } as React.CSSProperties}
+                style={{ "--wave-delay": `${wave * 0.24}s`, "--wave-alpha": `${0.18 - wave * 0.018}` } as React.CSSProperties}
               />
             ))}
             <span className="completion-wave-axis completion-wave-axis-x" />

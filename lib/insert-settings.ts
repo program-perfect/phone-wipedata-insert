@@ -56,6 +56,7 @@ export type InsertSettings = {
   mutedColor: string;
   glowStrength: number;
   batteryPercent: number;
+  storageTotalGb: number;
   dateLabel: string;
   deviceId: string;
   rebootEnabled: boolean;
@@ -405,6 +406,7 @@ export const DEFAULT_SETTINGS: InsertSettings = {
   mutedColor: presets.pixel.light.muted,
   glowStrength: 55,
   batteryPercent: 87,
+  storageTotalGb: 128,
   dateLabel: "26.06.2026",
   deviceId: "NK-2606",
   rebootEnabled: false,
@@ -464,6 +466,7 @@ export function sanitizeSettings(value: Partial<InsertSettings> | null | undefin
     deleteButtonColor: normalizeHexColor(merged.deleteButtonColor, DEFAULT_SETTINGS.deleteButtonColor),
     glowStrength: clampNumber(Number(merged.glowStrength), 0, 100),
     batteryPercent: clampNumber(Number(merged.batteryPercent), 1, 100),
+    storageTotalGb: Math.round(clampNumber(Number(merged.storageTotalGb), 8, 4096)),
     dateLabel: String(merged.dateLabel || DEFAULT_SETTINGS.dateLabel),
     deviceId: String(merged.deviceId || DEFAULT_SETTINGS.deviceId),
     rebootEnabled: Boolean(merged.rebootEnabled),
