@@ -50,8 +50,8 @@ function ChartStyle({ id, config }: { id: string; config: ChartConfig }) {
               return color ? `--color-${key}: ${color};` : null;
             })
             .filter(Boolean)
-            .join(" ")} }`)
-          .join(""),
+            .join("\n")} }`)
+          .join("\n"),
       }}
     />
   );

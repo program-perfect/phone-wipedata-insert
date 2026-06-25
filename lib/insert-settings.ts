@@ -1,10 +1,13 @@
-export const SETTINGS_STORAGE_KEY = "phone-wipe-insert-settings-v5-fast";
+export const SETTINGS_STORAGE_KEY = "phone-wipe-insert-settings-v6-start-controls";
 
+export type LocaleId = "en" | "ru";
 export type ThemeMode = "light" | "dark";
 export type PresetId = "pixel" | "samsung" | "xiaomi" | "huawei" | "oppo" | "nothing" | "motorola";
 export type FontId = "system" | "roboto" | "inter" | "mono" | "condensed";
 export type ProgressProfile = "linear" | "slowStart" | "fastStart" | "holdMiddle" | "custom";
 export type ElementStyle = "material" | "minimal" | "glass" | "cyberpunk" | "terminal" | "noir" | "brutalist";
+export type StartMode = "button" | "tap";
+export type AnimationPreset = "reduced" | "balanced" | "enhanced";
 
 export type InsertTone = {
   name: string;
@@ -31,9 +34,12 @@ export type InsertPreset = {
 };
 
 export type InsertSettings = {
+  locale: LocaleId;
   showHints: boolean;
   showTopStatus: boolean;
   elementStyle: ElementStyle;
+  startMode: StartMode;
+  animationPreset: AnimationPreset;
   themeMode: ThemeMode;
   presetId: PresetId;
   progressProfile: ProgressProfile;
@@ -43,6 +49,7 @@ export type InsertSettings = {
   checkpoint90: number;
   fontId: FontId;
   primaryColor: string;
+  deleteButtonColor: string;
   backgroundColor: string;
   surfaceColor: string;
   foregroundColor: string;
@@ -80,41 +87,57 @@ export const fontOptions: Record<FontId, { label: string; stack: string }> = {
 };
 
 export const progressProfiles: Record<ProgressProfile, string> = {
-  linear: "Линейно",
-  slowStart: "Медленный старт",
-  fastStart: "Быстрый старт",
-  holdMiddle: "Пауза в середине",
-  custom: "Ручной график",
+  linear: "Linear",
+  slowStart: "Slow start",
+  fastStart: "Fast start",
+  holdMiddle: "Mid hold",
+  custom: "Custom curve",
+};
+
+export const localeOptions: Record<LocaleId, string> = {
+  en: "English",
+  ru: "Русский",
+};
+
+export const startModes: Record<StartMode, string> = {
+  button: "Start by DELETE button",
+  tap: "Start by screen tap",
+};
+
+export const animationPresets: Record<AnimationPreset, string> = {
+  reduced: "Reduced",
+  balanced: "Balanced",
+  enhanced: "Enhanced",
 };
 
 export const elementStyles: Record<ElementStyle, { label: string; description: string }> = {
   material: {
     label: "Material Clean",
-    description: "Чистые системные карточки, мягкие радиусы, самый безопасный вариант для кадра.",
+    description: "Clean system cards, soft radii, the safest option for camera use.",
   },
   minimal: {
-    label: "Минимализм",
-    description: "Плоский интерфейс без лишнего свечения, максимум читаемости на телефоне.",
+    label: "Minimalism",
+    description: "Flat interface with almost no glow and maximum readability on phone cameras.",
   },
   glass: {
-    label: "Стекло",
-    description: "Полупрозрачные панели, blur, мягкое технологичное свечение.",
+    label: "Glass",
+    description: "Translucent panels, blur, and soft technical glow.",
   },
   cyberpunk: {
-    label: "Киберпанк",
-    description: "Жёсткие контуры, сетка, резкий glow, более агрессивная вставка.",
+    label: "Cyberpunk",
+    description: "Hard outlines, grid, strong glow, and a more aggressive insert look.",
   },
   terminal: {
-    label: "Терминал",
-    description: "Моноширинный HUD, строки как на сервисном экране, меньше глянца.",
+    label: "Terminal",
+    description: "Monospace HUD, service-screen style rows, less gloss.",
   },
   noir: {
     label: "Оперативный noir",
-    description: "Сдержанная служебная стилистика: почти документ, почти системный лог.",
+    description: "Restrained operational look: almost a document, almost a system log.",
   },
   brutalist: {
-    label: "Брутализм",
-    description: "Крупные блоки, резкие рамки, грубая инженерная графика.",
+    label: "Brutalism",
+    description: "Large blocks, sharp frames, and rough engineering graphics.",
   },
 };
 
@@ -360,9 +383,12 @@ export const presets: Record<PresetId, InsertPreset> = {
 };
 
 export const DEFAULT_SETTINGS: InsertSettings = {
+  locale: "en",
   showHints: true,
   showTopStatus: false,
   elementStyle: "material",
+  startMode: "button",
+  animationPreset: "balanced",
   themeMode: "light",
   presetId: "pixel",
   progressProfile: "custom",
@@ -372,6 +398,7 @@ export const DEFAULT_SETTINGS: InsertSettings = {
   checkpoint90: 98,
   fontId: "roboto",
   primaryColor: presets.pixel.light.primary,
+  deleteButtonColor: "#ef1d2d",
   backgroundColor: presets.pixel.light.background,
   surfaceColor: presets.pixel.light.surface,
   foregroundColor: presets.pixel.light.foreground,
@@ -406,6 +433,7 @@ export function settingsWithPreset(settings: InsertSettings, presetId: PresetId,
 export function sanitizeSettings(value: Partial<InsertSettings> | null | undefined): InsertSettings {
   const merged = { ...DEFAULT_SETTINGS, ...(value ?? {}) };
   const presetId = presets[merged.presetId as PresetId] ? (merged.presetId as PresetId) : DEFAULT_SETTINGS.presetId;
+  const locale = merged.locale === "ru" ? "ru" : "en";
   const themeMode = merged.themeMode === "dark" ? "dark" : "light";
   const fontId = fontOptions[merged.fontId as FontId] ? (merged.fontId as FontId) : DEFAULT_SETTINGS.fontId;
   const progressProfile = progressProfiles[merged.progressProfile as ProgressProfile]
@@ -414,20 +442,26 @@ export function sanitizeSettings(value: Partial<InsertSettings> | null | undefin
   const elementStyle = elementStyles[merged.elementStyle as ElementStyle]
     ? (merged.elementStyle as ElementStyle)
     : DEFAULT_SETTINGS.elementStyle;
+  const startMode = merged.startMode === "tap" ? "tap" : "button";
+  const animationPreset = merged.animationPreset === "reduced" || merged.animationPreset === "enhanced" ? merged.animationPreset : "balanced";
 
   return {
     ...merged,
+    locale,
     presetId,
     themeMode,
     fontId,
     progressProfile,
     elementStyle,
+    startMode,
+    animationPreset,
     showHints: Boolean(merged.showHints),
     showTopStatus: Boolean(merged.showTopStatus),
     durationSeconds: clampNumber(Number(merged.durationSeconds), 8, 120),
     checkpoint25: clampNumber(Number(merged.checkpoint25), 5, 45),
     checkpoint60: clampNumber(Number(merged.checkpoint60), 30, 85),
     checkpoint90: clampNumber(Number(merged.checkpoint90), 65, 98),
+    deleteButtonColor: normalizeHexColor(merged.deleteButtonColor, DEFAULT_SETTINGS.deleteButtonColor),
     glowStrength: clampNumber(Number(merged.glowStrength), 0, 100),
     batteryPercent: clampNumber(Number(merged.batteryPercent), 1, 100),
     dateLabel: String(merged.dateLabel || DEFAULT_SETTINGS.dateLabel),
@@ -485,4 +519,13 @@ export function hexToRgb(hex: string) {
 export function rgba(hex: string, alpha: number) {
   const { r, g, b } = hexToRgb(hex);
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+export function normalizeHexColor(value: unknown, fallback: string) {
+  const text = String(value ?? "").trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(text)) return text;
+  if (/^#[0-9a-fA-F]{3}$/.test(text)) {
+    return `#${text.slice(1).split("").map((char) => char + char).join("")}`;
+  }
+  return fallback;
 }

@@ -28,7 +28,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ru" suppressHydrationWarning className={`${inter.variable} ${mono.variable} ${roboto.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${mono.variable} ${roboto.variable}`}>
       <body>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
           {children}
