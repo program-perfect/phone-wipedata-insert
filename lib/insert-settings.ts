@@ -1,4 +1,4 @@
-export const SETTINGS_STORAGE_KEY = "phone-wipe-insert-settings-v4";
+export const SETTINGS_STORAGE_KEY = "phone-wipe-insert-settings-v5-fast";
 
 export type ThemeMode = "light" | "dark";
 export type PresetId = "pixel" | "samsung" | "xiaomi" | "huawei" | "oppo" | "nothing" | "motorola";
@@ -365,11 +365,11 @@ export const DEFAULT_SETTINGS: InsertSettings = {
   elementStyle: "material",
   themeMode: "light",
   presetId: "pixel",
-  progressProfile: "linear",
-  durationSeconds: 32,
-  checkpoint25: 22,
-  checkpoint60: 66,
-  checkpoint90: 92,
+  progressProfile: "custom",
+  durationSeconds: 8,
+  checkpoint25: 45,
+  checkpoint60: 85,
+  checkpoint90: 98,
   fontId: "roboto",
   primaryColor: presets.pixel.light.primary,
   backgroundColor: presets.pixel.light.background,

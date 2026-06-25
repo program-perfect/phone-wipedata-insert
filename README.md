@@ -47,12 +47,23 @@ Available controls:
 - Show/hide the startup hint. By default the hint appears on every visit/reload.
 - Light/dark mode. Default is **light**.
 - Android-style color presets: Pixel, Samsung One UI, Xiaomi HyperOS, Huawei HarmonyOS, OPPO ColorOS, Nothing OS, Motorola My UX.
-- Process duration and progress graph: linear, slow start, fast start, middle hold, custom checkpoints.
+- Process duration and progress graph: linear, slow start, fast start, middle hold, custom checkpoints. Default is now the fastest available config: 8 seconds with an aggressive custom curve.
 - Element/screen styles: Material Clean, Minimal, Glass, Cyberpunk, Terminal, Operative noir, Brutalist.
 - UI font preset.
 - Manual colors: accent, background, panels, text, secondary text, glow.
 - Date, device ID and battery percent.
 - Optional hard cut to a black reboot screen after 100%, with a fictional glowing **Droid** wordmark and a custom non-Android geometric logo.
+
+## Fast default process
+
+The default wipe process now uses the fastest available settings from the existing config:
+
+- duration: **8 seconds**;
+- progress profile: **custom**;
+- custom checkpoints: **45% at 25% time**, **85% at 60% time**, **98% at 90% time**;
+- settings storage key bumped to `phone-wipe-insert-settings-v5-fast`, so the new fast defaults are applied even on devices that previously saved slower local settings.
+
+You can still slow the animation down from **Настройки → Скорость** if the shot needs a longer rhythm.
 
 ## Structure
 
