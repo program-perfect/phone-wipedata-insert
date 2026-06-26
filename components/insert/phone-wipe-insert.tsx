@@ -1,15 +1,16 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Progress } from "@/components/ui/progress"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
-import { Switch } from "@/components/ui/switch"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import * as React from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DEFAULT_SETTINGS,
   SETTINGS_STORAGE_KEY,
@@ -34,9 +35,8 @@ import {
   type ProgressProfile,
   type StartMode,
   type ThemeMode,
-} from "@/lib/insert-settings"
-import { cn } from "@/lib/utils"
-import * as React from "react"
+} from "@/lib/insert-settings";
+import { cn } from "@/lib/utils";
 
 const stages = {
   en: [
@@ -136,7 +136,7 @@ const copy = {
     speedDescription: "For filming, the rhythm matters more than realism. The current default is the fastest configured curve.",
     duration: "Duration",
     startDelay: "Delay after DELETE",
-    startDelayDescription: "Time between pressing the start action and the actual wipe sequence. Default is 1 second.",
+    startDelayDescription: "Time between pressing the start action and the actual wipe sequence. Default is 1 second. Range: 0–60 seconds.",
     startingIn: (seconds: string) => `Starting in ${seconds}s`,
     seconds: "sec",
     profile: "Progress profile",
@@ -230,7 +230,7 @@ const copy = {
     speedDescription: "Для съёмки важнее управляемый ритм, а не реализм. Сейчас по умолчанию стоит самый быстрый график.",
     duration: "Длительность",
     startDelay: "Задержка после УДАЛИТЬ",
-    startDelayDescription: "Время между нажатием кнопки старта и началом самой очистки. По умолчанию — 1 секунда.",
+    startDelayDescription: "Время между нажатием кнопки старта и началом самой очистки. По умолчанию — 1 секунда. Диапазон: 0–60 секунд.",
     startingIn: (seconds: string) => `Старт через ${seconds} с`,
     seconds: "сек",
     profile: "Профиль графика",
@@ -1096,7 +1096,7 @@ export function PhoneWipeInsert() {
                       <div><p className="text-sm font-medium">{ui.rebootEnable}</p><p className="text-xs text-muted-foreground">{ui.rebootEnableDescription}</p></div>
                       <Switch checked={settings.rebootEnabled} onCheckedChange={(checked) => updateSetting("rebootEnabled", Boolean(checked))} />
                     </div>
-                    <FieldRow label={ui.rebootDelay} value={`${settings.rebootDelaySeconds.toFixed(1)} ${ui.seconds}`}><Slider min={0} max={60} step={0.1} value={[settings.rebootDelaySeconds]} onValueChange={([value]) => updateSetting("rebootDelaySeconds", value)} /></FieldRow>
+                    <FieldRow label={ui.rebootDelay} value={`${settings.rebootDelaySeconds.toFixed(1)} ${ui.seconds}`}><Slider min={0} max={10} step={0.1} value={[settings.rebootDelaySeconds]} onValueChange={([value]) => updateSetting("rebootDelaySeconds", value)} /></FieldRow>
                     <FieldRow label={ui.rebootLogo}><Input value={settings.rebootLogoText} onChange={(event) => updateSetting("rebootLogoText", event.target.value)} className="rounded-2xl bg-background/60" /></FieldRow>
                     <div className="rounded-[28px] border border-border bg-black p-6 text-center text-white">
                       <img src="/droid-logo.svg" alt="Droid logo preview" className="mx-auto h-16 w-16 drop-shadow-[0_0_22px_rgba(125,211,252,0.85)]" />
