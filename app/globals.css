@@ -647,3 +647,13 @@
 .wipe-live-elements [data-wipe-check-row][data-done="true"] {
   box-shadow: 0 0 18px color-mix(in srgb, var(--insert-primary) 18%, transparent);
 }
+
+.delete-start-button[data-arming="true"] {
+  cursor: default;
+  filter: saturate(0.96) brightness(0.98) contrast(0.98);
+}
+
+.delete-start-button[data-arming="true"]::before {
+  opacity: 0.26;
+  animation-duration: calc(var(--motion-sparkle, 1.75s) * 1.6);
+}

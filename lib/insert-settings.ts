@@ -1,4 +1,4 @@
-export const SETTINGS_STORAGE_KEY = "phone-wipe-insert-settings-v7-subtle-delete";
+export const SETTINGS_STORAGE_KEY = "phone-wipe-insert-settings-v8-start-delay";
 
 export type LocaleId = "en" | "ru";
 export type ThemeMode = "light" | "dark";
@@ -44,6 +44,7 @@ export type InsertSettings = {
   presetId: PresetId;
   progressProfile: ProgressProfile;
   durationSeconds: number;
+  startDelaySeconds: number;
   checkpoint25: number;
   checkpoint60: number;
   checkpoint90: number;
@@ -394,6 +395,7 @@ export const DEFAULT_SETTINGS: InsertSettings = {
   presetId: "pixel",
   progressProfile: "custom",
   durationSeconds: 8,
+  startDelaySeconds: 1,
   checkpoint25: 45,
   checkpoint60: 85,
   checkpoint90: 98,
@@ -460,6 +462,7 @@ export function sanitizeSettings(value: Partial<InsertSettings> | null | undefin
     showHints: Boolean(merged.showHints),
     showTopStatus: Boolean(merged.showTopStatus),
     durationSeconds: clampNumber(Number(merged.durationSeconds), 8, 120),
+    startDelaySeconds: clampNumber(Number(merged.startDelaySeconds), 0, 10),
     checkpoint25: clampNumber(Number(merged.checkpoint25), 5, 45),
     checkpoint60: clampNumber(Number(merged.checkpoint60), 30, 85),
     checkpoint90: clampNumber(Number(merged.checkpoint90), 65, 98),

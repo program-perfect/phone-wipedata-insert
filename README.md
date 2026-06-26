@@ -31,13 +31,15 @@ The wipe no longer starts immediately. By default, the insert waits for an expli
 - default start mode: **DELETE button**;
 - the button is red in every theme by default;
 - the DELETE button color is configurable in settings;
-- wipe elements appear only after the button is pressed;
+- after pressing DELETE, the process starts after a configurable delay;
+- default start delay: **1 second**;
+- wipe elements appear only after the delay completes and the active process begins;
 - the DELETE button disappears when the wipe UI enters the active state.
 
 Alternative mode:
 
 - **Tap to start** can be enabled in settings;
-- in this mode, a single tap on the idle screen starts the wipe process.
+- in this mode, a single tap on the idle screen arms the same configurable start delay before the wipe process begins.
 
 Fullscreen remains available in the idle state through the invisible top-right fullscreen area.
 
@@ -80,6 +82,7 @@ Available controls:
 - Show/hide the startup hint. By default the hint appears on every visit/reload.
 - Light/dark mode. Default is **light**.
 - Android-style color presets: Pixel, Samsung One UI, Xiaomi HyperOS, Huawei HarmonyOS, OPPO ColorOS, Nothing OS, Motorola My UX.
+- Start delay after DELETE/tap. Default is **1 second**.
 - Process duration and progress graph: linear, slow start, fast start, middle hold, custom checkpoints. Default is the fastest available config: 8 seconds with an aggressive custom curve.
 - Element/screen styles: Material Clean, Minimal, Glass, Cyberpunk, Terminal, Operative noir, Brutalist.
 - UI font preset.
@@ -94,9 +97,9 @@ The default wipe process uses the fastest available settings from the existing c
 - duration: **8 seconds**;
 - progress profile: **custom**;
 - custom checkpoints: **45% at 25% time**, **85% at 60% time**, **98% at 90% time**;
-- settings storage key bumped to `phone-wipe-insert-settings-v6-start-controls`, so new defaults are applied even on devices that previously saved older local settings.
+- settings storage key bumped to `phone-wipe-insert-settings-v8-start-delay`, so the new 1-second default start delay is applied cleanly together with the softer DELETE button default.
 
-You can still slow the animation down from **Settings → Speed** if the shot needs a longer rhythm.
+You can still slow the animation down or change the post-DELETE start delay from **Settings → Speed** if the shot needs a longer rhythm.
 
 ## Completion wave
 
@@ -117,3 +120,12 @@ types/                Shared declarations
 ```
 
 The visual language is custom, not default shadcn gray: light Android-system base by default with cinematic wipe HUD controls on top.
+
+## DELETE button visibility
+
+The default `DELETE` start button uses a restrained destructive red (`#ef1d2d`) with the original softer contrast, brightness, glow, and highlight treatment. It stays red across all themes, but the color can still be overridden from settings.
+
+
+## Foreground visibility fix
+
+The DELETE start button and wipe verification elements are forced to render at full foreground opacity. The start-slot and live wipe animations no longer settle at partial opacity, so check rows and progress blocks remain readable on camera while the DELETE button keeps a calmer, less emphasized look.

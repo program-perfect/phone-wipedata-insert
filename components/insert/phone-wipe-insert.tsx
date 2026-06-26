@@ -135,6 +135,9 @@ const copy = {
     speedTitle: "Process speed",
     speedDescription: "For filming, the rhythm matters more than realism. The current default is the fastest configured curve.",
     duration: "Duration",
+    startDelay: "Delay after DELETE",
+    startDelayDescription: "Time between pressing the start action and the actual wipe sequence. Default is 1 second.",
+    startingIn: (seconds: string) => `Starting in ${seconds}s`,
     seconds: "sec",
     profile: "Progress profile",
     manualCurve: "Manual curve",
@@ -226,6 +229,9 @@ const copy = {
     speedTitle: "Скорость процесса",
     speedDescription: "Для съёмки важнее управляемый ритм, а не реализм. Сейчас по умолчанию стоит самый быстрый график.",
     duration: "Длительность",
+    startDelay: "Задержка после УДАЛИТЬ",
+    startDelayDescription: "Время между нажатием кнопки старта и началом самой очистки. По умолчанию — 1 секунда.",
+    startingIn: (seconds: string) => `Старт через ${seconds} с`,
     seconds: "сек",
     profile: "Профиль графика",
     manualCurve: "Ручной график",
@@ -375,10 +381,13 @@ export function PhoneWipeInsert() {
   const tapCountRef = React.useRef(0);
   const lastTapAtRef = React.useRef(0);
   const tapTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const startTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [settings, setSettings] = React.useState<InsertSettings>(DEFAULT_SETTINGS);
   const [hydrated, setHydrated] = React.useState(false);
   const [started, setStarted] = React.useState(false);
+  const [pendingStart, setPendingStart] = React.useState(false);
+  const [startCountdown, setStartCountdown] = React.useState(0);
   const [runId, setRunId] = React.useState(0);
   const [progress, setProgress] = React.useState(0);
   const [elapsed, setElapsed] = React.useState(0);
@@ -428,6 +437,7 @@ export function PhoneWipeInsert() {
   React.useEffect(() => {
     return () => {
       if (tapTimerRef.current) clearTimeout(tapTimerRef.current);
+      if (startTimerRef.current) clearTimeout(startTimerRef.current);
     };
   }, []);
 
@@ -516,19 +526,65 @@ export function PhoneWipeInsert() {
     }
   }, []);
 
-  const startFromBeginning = React.useCallback(() => {
-    setFullscreenFailed(false);
-    setRebootScreen(false);
-    setSettingsOpen(false);
-    setHintOpen(false);
+  const beginProcessNow = React.useCallback(() => {
+    if (startTimerRef.current) {
+      clearTimeout(startTimerRef.current);
+      startTimerRef.current = null;
+    }
+
+    setPendingStart(false);
+    setStartCountdown(0);
     setProgress(0);
     setElapsed(0);
     setStarted(true);
     setRunId((value) => value + 1);
   }, []);
 
-  const resetToIdle = React.useCallback(() => {
+  const startFromBeginning = React.useCallback(() => {
+    if (startTimerRef.current) {
+      clearTimeout(startTimerRef.current);
+      startTimerRef.current = null;
+    }
+
+    setFullscreenFailed(false);
+    setRebootScreen(false);
+    setSettingsOpen(false);
+    setHintOpen(false);
     setStarted(false);
+    setProgress(0);
+    setElapsed(0);
+
+    const delayMs = Math.max(0, settings.startDelaySeconds * 1000);
+    if (delayMs <= 0) {
+      beginProcessNow();
+      return;
+    }
+
+    setPendingStart(true);
+    setStartCountdown(settings.startDelaySeconds);
+    const startAt = performance.now();
+
+    const tickCountdown = () => {
+      const remaining = Math.max(0, settings.startDelaySeconds - (performance.now() - startAt) / 1000);
+      setStartCountdown(remaining);
+      if (remaining > 0) {
+        startTimerRef.current = setTimeout(tickCountdown, 80);
+        return;
+      }
+      beginProcessNow();
+    };
+
+    startTimerRef.current = setTimeout(tickCountdown, 80);
+  }, [beginProcessNow, settings.startDelaySeconds]);
+
+  const resetToIdle = React.useCallback(() => {
+    if (startTimerRef.current) {
+      clearTimeout(startTimerRef.current);
+      startTimerRef.current = null;
+    }
+    setStarted(false);
+    setPendingStart(false);
+    setStartCountdown(0);
     setRebootScreen(false);
     setProgress(0);
     setElapsed(0);
@@ -610,14 +666,14 @@ export function PhoneWipeInsert() {
         }
 
         if (count === 2) {
-          if (started || settings.startMode === "tap") startFromBeginning();
+          if (pendingStart || started || settings.startMode === "tap") startFromBeginning();
           return;
         }
 
-        if (count === 1 && !started && settings.startMode === "tap") startFromBeginning();
+        if (count === 1 && !pendingStart && !started && settings.startMode === "tap") startFromBeginning();
       }, 360);
     },
-    [exitFullscreenOnly, hintOpen, settings.startMode, settingsOpen, startFromBeginning, started],
+    [exitFullscreenOnly, hintOpen, pendingStart, settings.startMode, settingsOpen, startFromBeginning, started],
   );
 
   const updateSetting = React.useCallback(<Key extends keyof InsertSettings>(key: Key, value: InsertSettings[Key]) => {
@@ -633,7 +689,13 @@ export function PhoneWipeInsert() {
 
     setSettings(DEFAULT_SETTINGS);
     setHintOpen(DEFAULT_SETTINGS.showHints);
+    if (startTimerRef.current) {
+      clearTimeout(startTimerRef.current);
+      startTimerRef.current = null;
+    }
     setStarted(false);
+    setPendingStart(false);
+    setStartCountdown(0);
     setRebootScreen(false);
     setProgress(0);
     setElapsed(0);
@@ -650,6 +712,7 @@ export function PhoneWipeInsert() {
   const isComplete = progress >= 100;
   const currentPreset = presets[settings.presetId];
   const showLiveElements = started;
+  const isIdleArmed = pendingStart && !started;
 
   return (
     <main
@@ -675,7 +738,7 @@ export function PhoneWipeInsert() {
         className="absolute right-1 top-1 z-50 h-12 w-12 rounded-full border border-primary/10 bg-primary/5 opacity-[0.035] transition-opacity active:opacity-40 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       />
 
-      {!started && (
+      {!started && !pendingStart && (
         <div className="absolute left-2 top-2 z-40 flex gap-2" data-control onPointerUp={(event) => event.stopPropagation()}>
           <Button size="sm" variant="ghost" className="rounded-full bg-background/45 px-3 text-xs backdrop-blur" onClick={() => setSettingsOpen(true)}>
             {ui.settings}
@@ -709,7 +772,7 @@ export function PhoneWipeInsert() {
               {ui.title}
             </h1>
             <p className="mx-auto max-w-[310px] text-sm leading-6 text-muted-foreground">
-              {started ? activeStage.detail : settings.startMode === "tap" ? ui.tapIdleDetail : ui.idleDetail}
+              {started ? activeStage.detail : isIdleArmed ? ui.startingIn(startCountdown.toFixed(1)) : settings.startMode === "tap" ? ui.tapIdleDetail : ui.idleDetail}
             </p>
           </div>
 
@@ -720,10 +783,10 @@ export function PhoneWipeInsert() {
               <div className="relative z-10 text-center">
                 <div className="text-[58px] font-light tabular-nums tracking-[-0.08em] text-foreground">
                   {Math.floor(progress)}
-                  <span className="ml-[0.4em] text-2xl text-cyan-200/80">%</span>
+                  <span className="ml-[0.06em] text-2xl text-primary/80">%</span>
                 </div>
                 <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.34em] text-primary/75">
-                  {started ? activeStage.label : ui.ready}
+                  {started ? activeStage.label : isIdleArmed ? ui.startingIn(startCountdown.toFixed(1)) : ui.ready}
                 </div>
               </div>
             </CardContent>
@@ -735,14 +798,16 @@ export function PhoneWipeInsert() {
                 <button
                   type="button"
                   className="delete-start-button w-full"
-                  onClick={startFromBeginning}
-                  aria-label={ui.delete}
+                  onClick={() => { if (!pendingStart) startFromBeginning(); }}
+                  aria-disabled={pendingStart}
+                  aria-label={isIdleArmed ? ui.startingIn(startCountdown.toFixed(1)) : ui.delete}
+                  data-arming={pendingStart ? "true" : "false"}
                 >
-                  <span>{ui.delete}</span>
+                  <span>{isIdleArmed ? ui.startingIn(startCountdown.toFixed(1)) : ui.delete}</span>
                 </button>
               ) : (
                 <div className="tap-start-panel rounded-[28px] border border-border bg-card/70 px-5 py-4 text-center text-sm font-medium text-muted-foreground">
-                  {ui.tapToStart}
+                  {isIdleArmed ? ui.startingIn(startCountdown.toFixed(1)) : ui.tapToStart}
                 </div>
               )}
               {fullscreenFailed && <p className="mt-3 text-center text-xs text-[color:var(--insert-warning)]">{ui.fullscreenFailed}</p>}
@@ -965,6 +1030,10 @@ export function PhoneWipeInsert() {
                     <FieldRow label={ui.duration} value={`${settings.durationSeconds} ${ui.seconds}`}>
                       <Slider min={8} max={120} step={1} value={[settings.durationSeconds]} onValueChange={([value]) => updateSetting("durationSeconds", value)} />
                     </FieldRow>
+                    <FieldRow label={ui.startDelay} value={`${settings.startDelaySeconds.toFixed(1)} ${ui.seconds}`}>
+                      <Slider min={0} max={60} step={0.1} value={[settings.startDelaySeconds]} onValueChange={([value]) => updateSetting("startDelaySeconds", value)} />
+                    </FieldRow>
+                    <p className="rounded-2xl bg-muted p-3 text-xs leading-5 text-muted-foreground">{ui.startDelayDescription}</p>
                     <FieldRow label={ui.profile}>
                       <Select value={settings.progressProfile} onValueChange={(value) => updateSetting("progressProfile", value as ProgressProfile)}>
                         <SelectTrigger className="w-full rounded-2xl bg-background/60"><SelectValue /></SelectTrigger>
@@ -1027,7 +1096,7 @@ export function PhoneWipeInsert() {
                       <div><p className="text-sm font-medium">{ui.rebootEnable}</p><p className="text-xs text-muted-foreground">{ui.rebootEnableDescription}</p></div>
                       <Switch checked={settings.rebootEnabled} onCheckedChange={(checked) => updateSetting("rebootEnabled", Boolean(checked))} />
                     </div>
-                    <FieldRow label={ui.rebootDelay} value={`${settings.rebootDelaySeconds.toFixed(1)} ${ui.seconds}`}><Slider min={0} max={10} step={0.1} value={[settings.rebootDelaySeconds]} onValueChange={([value]) => updateSetting("rebootDelaySeconds", value)} /></FieldRow>
+                    <FieldRow label={ui.rebootDelay} value={`${settings.rebootDelaySeconds.toFixed(1)} ${ui.seconds}`}><Slider min={0} max={60} step={0.1} value={[settings.rebootDelaySeconds]} onValueChange={([value]) => updateSetting("rebootDelaySeconds", value)} /></FieldRow>
                     <FieldRow label={ui.rebootLogo}><Input value={settings.rebootLogoText} onChange={(event) => updateSetting("rebootLogoText", event.target.value)} className="rounded-2xl bg-background/60" /></FieldRow>
                     <div className="rounded-[28px] border border-border bg-black p-6 text-center text-white">
                       <img src="/droid-logo.svg" alt="Droid logo preview" className="mx-auto h-16 w-16 drop-shadow-[0_0_22px_rgba(125,211,252,0.85)]" />
